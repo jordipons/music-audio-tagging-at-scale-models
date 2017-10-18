@@ -9,12 +9,13 @@ We study two conceptually very different design principles. The first is based o
 In the following, we present the several architectures we used for our study that are implemented in tensorflow at `models.py`:
 
 Waveform front-end:	
-![Waveform front-end](waveform.png)
+
+<center><img src="waveform.png" height="120"></center>
 
 Spectrogram front-end:
 
-<img src="spectrogram.png" height="300">
+<center><img src="spectrogram.png" height="300"></center>
 
 In order to allow a fair comparison among front-ends, the previous front-ends share the same back-end:
 
-<img src="backend.png" width=90%">
+<center><img src="backend.png" height="120"></center>
