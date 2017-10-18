@@ -10,7 +10,7 @@ In the following, we present the several architectures we used for our study tha
 
 Waveform front-end:	
 
-<center><img src="waveform.png" height="90"></center>
+<center><img src="waveform.png" height="80"></center>
 
 Spectrogram front-end:
 
