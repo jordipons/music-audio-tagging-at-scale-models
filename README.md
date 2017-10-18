@@ -12,7 +12,8 @@ Waveform front-end:
 ![Waveform front-end](waveform.png)
 
 Spectrogram front-end:
-![Spectrogram front-end](spectrogram.png =100x20)
+<img src="spectrogram.png" height="48">
+![Spectrogram front-end](spectrogram.png)
 
 In order to allow a fair comparison among front-ends, the previous front-ends share the same back-end:
 
