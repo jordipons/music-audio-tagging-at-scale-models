@@ -6,23 +6,21 @@ It is commonly argued among music/audio engineering researchers that the lack of
 We study two conceptually very different design principles. The first is based on a waveform front-end, and no decisions based on domain knowledge inspired its design. Note that the assumptions of this model are reduced to its minimum expression: raw audio is set as input, and the used CNN does minimal assumptions over the structure of the data - since it is using a stack of very small filters. But for the second model, with a spectrogram front-end, it was key to make use of domain knowledge to propose efficient and intuitive improvements to our model. The proposed models are capable of outperforming the current music audio tagging system in production at Pandora, and our results confirm that spectrogram-based architectures are still superior to waveform-based models. However, the gap between these models has been reduced via training with more data, and using the waveform (sample-level) front-end proposed by Lee et al.
 
 ## Models
-In the following, we present the several architectures we used for our study that are implemented in tensorflow at `models.py`:
+The following architectures were used in our study, and their tensorflow implementation is available in `models.py`:
 
 ### Waveform front-end	
 
-It is based on the front-end proposed by Lee et al.
+It is based on the front-end proposed by ```Lee, et al. "Sample-level Deep Convolutional Neural Networks for Music Auto-tagging Using Raw Waveforms." arXiv preprint arXiv:1703.01789 (2017)```.
 
-```Lee, et al. "Sample-level Deep Convolutional Neural Networks for Music Auto-tagging Using Raw Waveforms." arXiv preprint arXiv:1703.01789 (2017).```
-
-<div style="text-align:center"><img src="waveform.png"></div>
+<p align="center"><img src="waveform.png"></p>
 
 ### Spectrogram front-end
 
-The proposed front-end is a single-layer CNN with many filter shapes that are grouped into two branches: (i) top branch - timbral features \cite{pons2017timbre}; and (ii) lower branch - temporal features.
+The proposed front-end is a single-layer CNN with many filter shapes that are grouped into two branches: (i) top branch - timbral features; and (ii) lower branch - temporal features.
 
-<div style="text-align:center"><img src="spectrogram.png" height="290"></div>
+<p align="center"><img src="spectrogram.png" height="290"></p>
 
 ### Back-end
 In order to allow a fair comparison among front-ends, the previous front-ends share this same back-end.
 
-<div style="text-align:center"><img src="backend.png" height="190"></div>
+<p align="center"><img src="backend.png" height="190"></p>
