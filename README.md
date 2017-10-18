@@ -10,9 +10,14 @@ In the following, we present the several architectures we used for our study tha
 
 ### Waveform front-end	
 
+It is based on the front-end proposed by Lee et al.
+```Lee, Jongpil, et al. "Sample-level Deep Convolutional Neural Networks for Music Auto-tagging Using Raw Waveforms." arXiv preprint arXiv:1703.01789 (2017).```
+
 <center><img src="waveform.png"></center>
 
 ### Spectrogram front-end
+
+The proposed front-end is a single-layer CNN with many filter shapes that are grouped into two branches: (i) top branch -- timbral features \cite{pons2017timbre}; and (ii) lower branch -- temporal features.
 
 <img src="spectrogram.png" height="290" align="middle">
 
