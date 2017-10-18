@@ -13,8 +13,8 @@ Waveform front-end:
 
 Spectrogram front-end:
 
-<img src="spectrogram.png" height="150">
+<img src="spectrogram.png" height="300">
 
 In order to allow a fair comparison among front-ends, the previous front-ends share the same back-end:
 
-![Back-end](backend.png)
+<img src="backend.png" width=90%">
