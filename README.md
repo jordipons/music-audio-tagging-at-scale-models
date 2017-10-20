@@ -31,7 +31,7 @@ In order to allow a fair comparison among models, the previous front-ends share 
 
 <p align="center"><img src="backend.png" height="190"></p>
 
-It is conformed by three CNN layers (with 512 filters each and two of those having residual connections), two pooling layers and a dense layer. We found this filter shapes setup to be (i) computationally efficient and (ii) shaped such that all extracted features are considered across a reasonable amount of temporal context (note the 7 x M' filter shapes, representing *time* x *all features*).
+It is conformed by three CNN layers (with 512 filters each and two of those having residual connections), two pooling layers and a dense layer. We found this filter shapes (Dieleman & Schrauwen, 2014) setup to be (i) computationally efficient and (ii) shaped such that all extracted features are considered across a reasonable amount of temporal context (note the 7 x M' filter shapes, representing *time* x *all features*).
 
 We also make a drastic use of temporal pooling: firstly, via down-sapling x2 the temporal dimensionality of the CNNs feature map; and secondly, by making use of a global pooling layer. The global pooling strategy allows
 for variable length inputs to the network. Finally, a dense layer connects the pooled features to the output.
@@ -46,4 +46,4 @@ Pons & Serra (2017, March) *Designing efficient architectures for modeling tempo
 
 Pons, et al. (2016, June) *Experimenting with musically motivated convolutional neural networks* in 14th International Workshop on Content-Based Multimedia Indexing (CBMI2016). Publisher: IEEE.
 
-Dieleman and Schrauwen (2014, May) *End-to-end learning for music audio* in 39nd IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP2014). Publisher: IEEE.
+Dieleman & Schrauwen (2014, May) *End-to-end learning for music audio* in 39nd IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP2014). Publisher: IEEE.
