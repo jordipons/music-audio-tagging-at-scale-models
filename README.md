@@ -10,7 +10,7 @@ The following models were used in our study, and their tensorflow implementation
 
 ### Waveform front-end	
 
-It is based on the *sample-level* front-end proposed by Lee, et al. -- *Sample-level Deep Convolutional Neural Networks for Music Auto-tagging Using Raw Waveforms* in arXiv:1703.01789 (2017).
+It is based on the *sample-level* front-end proposed by Lee, et al.
 
 <p align="center"><img src="waveform.png"></p>
 
@@ -18,13 +18,13 @@ Each layer has 64, 64, 64, 128, 128, 128 and 256 filters respectively. Via hiera
 
 ### Spectrogram front-end
 
-The proposed front-end is a single-layer CNN with many filter shapes that are grouped into two branches: (i) top branch - timbral features; and (ii) lower branch - temporal features.
+The proposed front-end is a single-layer CNN with many filter shapes that are grouped into two branches (Pons et al., 2016): (i) top branch - timbral features; and (ii) lower branch - temporal features.
 
 <p align="center"><img src="spectrogram.png" height="290"></p>
 
-The top branch is designed to capture pitch-invariant timbral features that are occurring at different time-frequency scales in the spectrogram. Pitch invariance is enforced via enabling CNN filters to convolve through the frequency domain, and via max-pooling the feature map vertical axis. 
+The top branch is designed to capture pitch-invariant timbral features that are occurring at different time-frequency scales in the spectrogram. Pitch invariance is enforced via enabling CNN filters to convolve through the frequency domain, and via max-pooling the feature map vertical axis (Pons et al., 2017). 
 
-The lower branch is meant to learn temporal features, designed to efficiently capture different time-scale representations by using several filter shapes. But note that CNN filters operate over an energy envelope (not directly over the spectrogram) obtained via mean-pooling the frequency-axis of the spectrogram.
+The lower branch is meant to learn temporal features, designed to efficiently capture different time-scale representations by using several filter shapes. But note that CNN filters operate over an energy envelope (not directly over the spectrogram) obtained via mean-pooling the frequency-axis of the spectrogram (Pons and Serra, 2017).
 
 ### Back-end
 In order to allow a fair comparison among models, the previous front-ends share this same back-end.
@@ -35,3 +35,15 @@ It is conformed by three CNN layers (with 512 filters each and two of those havi
 
 We also make a drastic use of temporal pooling: firstly, via down-sapling x2 the temporal dimensionality of the CNNs feature map; and secondly, by making use of a global pooling layer. The global pooling strategy allows
 for variable length inputs to the network. Finally, a dense layer connects the pooled features to the output.
+
+## References
+
+Lee, et al. (2017, May) *Sample-level Deep Convolutional Neural Networks for Music Auto-tagging Using Raw Waveforms* in arXiv:1703.01789 (2017).
+
+Pons, et al. (2017, September) *Timbre Analysis of Music Audio Signals with Convolutional Neural Networks* in 25th European Signal Processing Conference (EUSIPCO2017). Publisher: IEEE.
+
+Pons & Serra (2017, March) *Designing efficient architectures for modeling temporal features with convolutional neural networks* in 42nd IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP2017). Publisher: IEEE.
+
+Pons, et al. (2016, June) *Experimenting with musically motivated convolutional neural networks* in 14th International Workshop on Content-Based Multimedia Indexing (CBMI2016). Publisher: IEEE.
+
+Dieleman and Schrauwen (2014, May) *End-to-end learning for music audio* in 39nd IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP2014). Publisher: IEEE.
