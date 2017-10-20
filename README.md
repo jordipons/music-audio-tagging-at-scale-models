@@ -38,7 +38,7 @@ for variable length inputs to the network. Finally, a dense layer connects the p
 
 ## References
 
-[1] Lee, et al. *Sample-level Deep Convolutional Neural Networks for Music Auto-tagging Using Raw Waveforms* in arXiv:1703.01789 (2017, May).
+[1] Lee, et al. *Sample-level Deep Convolutional Neural Networks for Music Auto-tagging Using Raw Waveforms* in arXiv:1703.01789. (2017, May)
 
 [2] Pons, et al. *Experimenting with musically motivated convolutional neural networks* in 14th International Workshop on Content-Based Multimedia Indexing (CBMI2016). Publisher: IEEE. (2016, June)
 
