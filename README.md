@@ -10,7 +10,7 @@ The following models were used in our study, and their tensorflow implementation
 
 ### Waveform front-end	
 
-It is based on the *sample-level* front-end proposed by Lee, et al. [1]
+It is based on the *sample-level* front-end proposed by Lee, et al. [1]:
 
 <p align="center"><img src="waveform.png"></p>
 
@@ -18,7 +18,7 @@ Each layer has 64, 64, 64, 128, 128, 128 and 256 filters respectively. Via hiera
 
 ### Spectrogram front-end
 
-The proposed front-end is a single-layer CNN with many filter shapes that are grouped into two branches [2] (i) top branch - timbral features; and (ii) lower branch - temporal features.
+The proposed front-end is a single-layer CNN with many filter shapes that are grouped into two branches [2]: (i) top branch - timbral features; and (ii) lower branch - temporal features.
 
 <p align="center"><img src="spectrogram.png" height="290"></p>
 
@@ -31,7 +31,7 @@ In order to allow a fair comparison among models, the previous front-ends share 
 
 <p align="center"><img src="backend.png" height="190"></p>
 
-It is conformed by three CNN layers (with 512 filters each and two of those having residual connections), two pooling layers and a dense layer. We found this filter shapes [5] setup to be (i) computationally efficient and (ii) shaped such that all extracted features are considered across a reasonable amount of temporal context (note the 7 x M' filter shapes, representing *time* x *all features*).
+It is conformed by three CNN layers (with 512 filters each and two of those having residual connections), two pooling layers and a dense layer. We found this filter shapes setup [5] to be (i) computationally efficient and (ii) shaped such that all extracted features are considered across a reasonable amount of temporal context (note the 7 x M' filter shapes, representing *time* x *all features*).
 
 We also make a drastic use of temporal pooling: firstly, via down-sapling x2 the temporal dimensionality of the CNNs feature map; and secondly, by making use of a global pooling layer. The global pooling strategy allows
 for variable length inputs to the network. Finally, a dense layer connects the pooled features to the output.
