@@ -10,7 +10,7 @@ The following models were used in our study, and their tensorflow implementation
 
 ### Waveform front-end	
 
-It is based on the *sample-level* front-end proposed by Lee, et al.: *Sample-level Deep Convolutional Neural Networks for Music Auto-tagging Using Raw Waveforms* in arXiv:1703.01789 (2017).
+It is based on the *sample-level* front-end proposed by Lee, et al. -- *Sample-level Deep Convolutional Neural Networks for Music Auto-tagging Using Raw Waveforms* in arXiv:1703.01789 (2017).
 
 <p align="center"><img src="waveform.png"></p>
 
