@@ -1,12 +1,12 @@
 ## End-to-end learning for music audio tagging at scale
-The lack of data tends to limit the outcomes of deep learning research - specially, when dealing with end-to-end learning stacks processing raw data such as waveforms. In this study we make use of musical labels annotated for 1.2 million tracks. This large amount of data allows us to unrestrictedly explore different front-end paradigms: from assumption-free models (*i.e.*: using waveforms as input with very small convolutional filters); to models that rely on domain knowledge (*i.e.*: log-MEL spectrograms with a convolutional neural network designed to learn temporal and timbral features). Results suggest that, while spectrogram-based models surpass their waveform-based counterparts, the difference in performance shrinks as more data is employed.
+The lack of data tends to limit the outcomes of deep learning research - specially, when dealing with end-to-end learning stacks processing raw data such as waveforms. In this study we make use of musical labels annotated for 1.2 million tracks. This large amount of data allows us to unrestrictedly explore different front-end paradigms: from assumption-free models - using waveforms as input with very small convolutional filters; to models that rely on domain knowledge - log-mel spectrograms with a convolutional neural network designed to learn temporal and timbral features. Results suggest that while spectrogram-based models surpass their waveform-based counterparts, the difference in performance shrinks as more data are employed.
 
-Curious about how our models work? We have a demo: http://www.jordipons.me/apps/music-audio-tagging-at-scale-demo/
+Are you curious to see how our models work? We have a demo: http://www.jordipons.me/apps/music-audio-tagging-at-scale-demo/
 
 *Full reference will be available soon..*
 
 ## Models
-The following models were used in our study, and their tensorflow implementation is available in `models.py`. We study two models that are based on two conceptually very different design principles. The first is based on a waveform front-end, and no decisions based on domain knowledge inspired its design. The assumptions of this model are reduced to its minimum expression: raw audio is set as input, and the used CNN does minimal assumptions over the structure of the data due to its set of very small filters. For the second model, with a spectrogram front-end, we make use of domain knowledge to propose intuitive improvements for our model.
+The following models were used in our study, and their tensorflow implementation is available in `models.py`. We study two models that are based on two conceptually very different design principles. The first is based on a waveform front-end, and no decisions based on domain knowledge inspired its design. The assumptions of this model are reduced to its minimum expression: raw audio is set as input, and the used CNN does minimal assumptions over the structure of the data due to its set of very small filters. For the second model, with a spectrogram front-end, we make use of domain knowledge to guide the design of our model.
 
 ### Waveform front-end	
 
@@ -18,7 +18,7 @@ Each layer has 64, 64, 64, 128, 128, 128 and 256 filters respectively. Via hiera
 
 ### Spectrogram front-end
 
-The proposed front-end is a single-layer CNN with many filter shapes that are grouped into two branches [2]: (i) top branch - timbral features; and (ii) lower branch - temporal features.
+The proposed front-end is a single-layer CNN with many filter shapes that are grouped into two branches [2]: (i) top branch - timbral features [3]; and (ii) lower branch - temporal features [4].
 
 <p align="center"><img src="spectrogram.png" height="290"></p>
 
