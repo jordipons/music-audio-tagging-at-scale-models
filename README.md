@@ -3,7 +3,7 @@ The lack of data tends to limit the outcomes of deep learning research - special
 
 Are you curious to see how our models work? We have a demo: http://www.jordipons.me/apps/music-audio-tagging-at-scale-demo/
 
-*Jordi Pons, Oriol Nieto, Matthew Prockup, Erik M. Schmidt, Andreas F. Ehmann and Xavier Serra. End-to-end learning for music audio tagging at scale. arXiv preprint: https://arxiv.org/pdf/1711.02520.pdf - in proceedings of the Workshop on Machine Learning for Audio Signal Processing (ML4Audio) at NIPS 2017.*
+*Jordi Pons, Oriol Nieto, Matthew Prockup, Erik M. Schmidt, Andreas F. Ehmann and Xavier Serra. End-to-end learning for music audio tagging at scale. In proceedings of the Workshop on Machine Learning for Audio Signal Processing (ML4Audio) at NIPS 2017 - arXiv preprint: https://arxiv.org/pdf/1711.02520.pdf*
 
 ## Models
 The following models were used in our study, and their tensorflow implementation is available in `models.py`. We study two models that are based on two conceptually very different design principles. The first is based on a waveform front-end, and no decisions based on domain knowledge inspired its design. The assumptions of this model are reduced to its minimum expression: raw audio is set as input, and the used CNN does minimal assumptions over the structure of the data due to its set of very small filters. For the second model, with a spectrogram front-end, we make use of domain knowledge to guide the design of our model.
