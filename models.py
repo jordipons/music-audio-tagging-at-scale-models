@@ -19,6 +19,7 @@ def wave_frontend(x, is_training):
                              kernel_size=3,
                              strides=3,
                              padding="valid",
+                             activation=tf.nn.relu,                             
                              kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     bn_conv0 = tf.layers.batch_normalization(conv0, training=is_training)
 
@@ -27,6 +28,7 @@ def wave_frontend(x, is_training):
                              kernel_size=3,
                              strides=1,
                              padding="valid",
+                             activation=tf.nn.relu,
                              kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     bn_conv1 = tf.layers.batch_normalization(conv1, training=is_training)
     pool_1 = tf.layers.max_pooling1d(bn_conv1, pool_size=3, strides=3)
@@ -36,6 +38,7 @@ def wave_frontend(x, is_training):
                              kernel_size=3,
                              strides=1, 
                              padding="valid",
+                             activation=tf.nn.relu,                             
                              kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     bn_conv2 = tf.layers.batch_normalization(conv2, training=is_training)
     pool_2 = tf.layers.max_pooling1d(bn_conv2, pool_size=3, strides=3)
@@ -45,6 +48,7 @@ def wave_frontend(x, is_training):
                              kernel_size=3,
                              strides=1,
                              padding="valid",
+                             activation=tf.nn.relu,                             
                              kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     bn_conv3 = tf.layers.batch_normalization(conv3, training=is_training)
     pool_3 = tf.layers.max_pooling1d(bn_conv3, pool_size=3, strides=3)
@@ -54,6 +58,7 @@ def wave_frontend(x, is_training):
                              kernel_size=3,
                              strides=1,
                              padding="valid",
+                             activation=tf.nn.relu,                             
                              kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     bn_conv4 = tf.layers.batch_normalization(conv4, training=is_training)
     pool_4 = tf.layers.max_pooling1d(bn_conv4, pool_size=3, strides=3)
@@ -63,6 +68,7 @@ def wave_frontend(x, is_training):
                              kernel_size=3,
                              strides=1,
                              padding="valid",
+                             activation=tf.nn.relu,                             
                              kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     bn_conv5 = tf.layers.batch_normalization(conv5, training=is_training)
     pool_5 = tf.layers.max_pooling1d(bn_conv5, pool_size=3, strides=3)
@@ -72,6 +78,7 @@ def wave_frontend(x, is_training):
                              kernel_size=3,
                              strides=1,
                              padding="valid",
+                             activation=tf.nn.relu,                             
                              kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     bn_conv6 = tf.layers.batch_normalization(conv6, training=is_training)
     pool_6 = tf.layers.max_pooling1d(bn_conv6, pool_size=3, strides=3)
@@ -287,6 +294,7 @@ def backend(route_out, is_training, config, num_units):
     flat_pool2_dropout = tf.layers.dropout(flat_pool2, rate=0.5, training=is_training)
     dense = tf.layers.dense(inputs=flat_pool2_dropout,
                             units=num_filt,
+                            activation=tf.nn.relu,                            
                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     bn_dense = tf.layers.batch_normalization(dense, training=is_training)
     dense_dropout = tf.layers.dropout(bn_dense, rate=0.5, training=is_training)
