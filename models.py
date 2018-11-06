@@ -293,7 +293,7 @@ def backend(route_out, is_training, config, num_units):
     # output - 1 dense layer with droupout
     flat_pool2_dropout = tf.layers.dropout(flat_pool2, rate=0.5, training=is_training)
     dense = tf.layers.dense(inputs=flat_pool2_dropout,
-                            units=num_filt,
+                            units=num_units,
                             activation=tf.nn.relu,                            
                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     bn_dense = tf.layers.batch_normalization(dense, training=is_training)
