@@ -1,3 +1,33 @@
+"""
+Copyright 2017-2019 Pandora Media, Inc.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice,
+this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+this list of conditions and the following disclaimer in the documentation
+and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its contributors
+may be used to endorse or promote products derived from this software without
+specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+"""
+
 import tensorflow as tf
 
 '''
@@ -6,21 +36,25 @@ models.py: in this script some tensorflow models are build.
 See build_model() for an example showing how to use these functions.
 '''
 
+
 def wave_frontend(x, is_training):
     '''Function implementing the front-end proposed by Lee et al. 2017.
-       Lee, et al. "Sample-level Deep Convolutional Neural Networks for Music Auto-tagging Using Raw Waveforms." 
+       Lee, et al. "Sample-level Deep Convolutional Neural Networks for Music
+       Auto-tagging Using Raw Waveforms."
        arXiv preprint arXiv:1703.01789 (2017).
 
     - 'x': placeholder whith the input.
-    - 'is_training': placeholder indicating weather it is training or test phase, for dropout or batch norm.
+    - 'is_training': placeholder indicating weather it is training or test
+    phase, for dropout or batch norm.
     '''
+    initializer = tf.contrib.layers.variance_scaling_initializer()
     conv0 = tf.layers.conv1d(inputs=x,
                              filters=64,
                              kernel_size=3,
                              strides=3,
                              padding="valid",
-                             activation=tf.nn.relu,                             
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             activation=tf.nn.relu,
+                             kernel_initializer=initializer)
     bn_conv0 = tf.layers.batch_normalization(conv0, training=is_training)
 
     conv1 = tf.layers.conv1d(inputs=bn_conv0,
@@ -29,17 +63,17 @@ def wave_frontend(x, is_training):
                              strides=1,
                              padding="valid",
                              activation=tf.nn.relu,
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             kernel_initializer=initializer)
     bn_conv1 = tf.layers.batch_normalization(conv1, training=is_training)
     pool_1 = tf.layers.max_pooling1d(bn_conv1, pool_size=3, strides=3)
 
     conv2 = tf.layers.conv1d(inputs=pool_1,
                              filters=64,
                              kernel_size=3,
-                             strides=1, 
+                             strides=1,
                              padding="valid",
-                             activation=tf.nn.relu,                             
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             activation=tf.nn.relu,
+                             kernel_initializer=initializer)
     bn_conv2 = tf.layers.batch_normalization(conv2, training=is_training)
     pool_2 = tf.layers.max_pooling1d(bn_conv2, pool_size=3, strides=3)
 
@@ -48,8 +82,8 @@ def wave_frontend(x, is_training):
                              kernel_size=3,
                              strides=1,
                              padding="valid",
-                             activation=tf.nn.relu,                             
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             activation=tf.nn.relu,
+                             kernel_initializer=initializer)
     bn_conv3 = tf.layers.batch_normalization(conv3, training=is_training)
     pool_3 = tf.layers.max_pooling1d(bn_conv3, pool_size=3, strides=3)
 
@@ -58,8 +92,8 @@ def wave_frontend(x, is_training):
                              kernel_size=3,
                              strides=1,
                              padding="valid",
-                             activation=tf.nn.relu,                             
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             activation=tf.nn.relu,
+                             kernel_initializer=initializer)
     bn_conv4 = tf.layers.batch_normalization(conv4, training=is_training)
     pool_4 = tf.layers.max_pooling1d(bn_conv4, pool_size=3, strides=3)
 
@@ -68,8 +102,8 @@ def wave_frontend(x, is_training):
                              kernel_size=3,
                              strides=1,
                              padding="valid",
-                             activation=tf.nn.relu,                             
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             activation=tf.nn.relu,
+                             kernel_initializer=initializer)
     bn_conv5 = tf.layers.batch_normalization(conv5, training=is_training)
     pool_5 = tf.layers.max_pooling1d(bn_conv5, pool_size=3, strides=3)
 
@@ -78,8 +112,8 @@ def wave_frontend(x, is_training):
                              kernel_size=3,
                              strides=1,
                              padding="valid",
-                             activation=tf.nn.relu,                             
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             activation=tf.nn.relu,
+                             kernel_initializer=initializer)
     bn_conv6 = tf.layers.batch_normalization(conv6, training=is_training)
     pool_6 = tf.layers.max_pooling1d(bn_conv6, pool_size=3, strides=3)
 
@@ -89,26 +123,36 @@ def wave_frontend(x, is_training):
 def spec_frontend(x, is_training, config, num_filt):
     '''Function implementing the proposed spectrogram front-end.
 
-    - 'route_out': is the output of the front-end, and therefore the input of this function.
-    - 'is_training': placeholder indicating weather it is training or test phase, for dropout or batch norm.
-    - 'config': dictionary with some configurable parameters like: number of output units - config['numOutputNeurons']
-                or number of frequency bins of the spectrogram config['setup_params']['yInput']
-    - 'num_filt': multiplicative factor that controls the number of filters for every filter shape.
+    - 'route_out': is the output of the front-end, and therefore the input of
+        this function.
+    - 'is_training': placeholder indicating weather it is training or test
+        phase, for dropout or batch norm.
+    - 'config': dictionary with some configurable parameters like: number of
+        output units - config['numOutputNeurons'] or number of frequency bins
+        of the spectrogram config['setup_params']['yInput']
+    - 'num_filt': multiplicative factor that controls the number of filters
+        for every filter shape.
     '''
+    initializer = tf.contrib.layers.variance_scaling_initializer()
     input_layer = tf.expand_dims(x, 3)
 
     # padding only time domain for an efficient 'same' implementation
     # (since we pool throughout all frequency afterwards)
-    input_pad_7 = tf.pad(input_layer, [[0, 0], [3, 3], [0, 0], [0, 0]], "CONSTANT")
-    input_pad_3 = tf.pad(input_layer, [[0, 0], [1, 1], [0, 0], [0, 0]], "CONSTANT")
+    input_pad_7 = tf.pad(input_layer,
+                         [[0, 0], [3, 3], [0, 0], [0, 0]],
+                         "CONSTANT")
+    input_pad_3 = tf.pad(input_layer,
+                         [[0, 0], [1, 1], [0, 0], [0, 0]],
+                         "CONSTANT")
 
     # [TIMBRE] filter shape 1: 7x0.9f
+    kernel_size = [7, int(0.9 * config['setup_params']['yInput'])]
     conv1 = tf.layers.conv2d(inputs=input_pad_7,
                              filters=num_filt,
-                             kernel_size=[7, int(0.9 * config['setup_params']['yInput'])],
+                             kernel_size=kernel_size,
                              padding="valid",
                              activation=tf.nn.relu,
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             kernel_initializer=initializer)
     bn_conv1 = tf.layers.batch_normalization(conv1, training=is_training)
     pool1 = tf.layers.max_pooling2d(inputs=bn_conv1,
                                     pool_size=[1, bn_conv1.shape[2]],
@@ -116,12 +160,13 @@ def spec_frontend(x, is_training, config, num_filt):
     p1 = tf.squeeze(pool1, [2])
 
     # [TIMBRE] filter shape 2: 3x0.9f
-    conv2 = tf.layers.conv2d(inputs=input_pad_3, 
+    kernel_size = [3, int(0.9 * config['setup_params']['yInput'])]
+    conv2 = tf.layers.conv2d(inputs=input_pad_3,
                              filters=num_filt*2,
-                             kernel_size=[3, int(0.9 * config['setup_params']['yInput'])],
+                             kernel_size=kernel_size,
                              padding="valid",
                              activation=tf.nn.relu,
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             kernel_initializer=initializer)
     bn_conv2 = tf.layers.batch_normalization(conv2, training=is_training)
     pool2 = tf.layers.max_pooling2d(inputs=bn_conv2,
                                     pool_size=[1, bn_conv2.shape[2]],
@@ -129,12 +174,12 @@ def spec_frontend(x, is_training, config, num_filt):
     p2 = tf.squeeze(pool2, [2])
 
     # [TIMBRE] filter shape 3: 1x0.9f
-    conv3 = tf.layers.conv2d(inputs=input_layer, 
+    conv3 = tf.layers.conv2d(inputs=input_layer,
                              filters=num_filt*4,
                              kernel_size=[1, int(0.9 * config['setup_params']['yInput'])],
                              padding="valid",
                              activation=tf.nn.relu,
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             kernel_initializer=initializer)
     bn_conv3 = tf.layers.batch_normalization(conv3, training=is_training)
     pool3 = tf.layers.max_pooling2d(inputs=bn_conv3,
                                     pool_size=[1, bn_conv3.shape[2]],
@@ -147,7 +192,7 @@ def spec_frontend(x, is_training, config, num_filt):
                              kernel_size=[7, int(0.4 * config['setup_params']['yInput'])],
                              padding="valid",
                              activation=tf.nn.relu,
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             kernel_initializer=initializer)
     bn_conv4 = tf.layers.batch_normalization(conv4, training=is_training)
     pool4 = tf.layers.max_pooling2d(inputs=bn_conv4,
                                     pool_size=[1, bn_conv4.shape[2]],
@@ -155,25 +200,27 @@ def spec_frontend(x, is_training, config, num_filt):
     p4 = tf.squeeze(pool4, [2])
 
     # [TIMBRE] filter shape 5: 3x0.4f
-    conv5 = tf.layers.conv2d(inputs=input_pad_3, 
-                             filters=num_filt*2,
+    conv5 = tf.layers.conv2d(inputs=input_pad_3,
+                             filters=num_filt * 2,
                              kernel_size=[3, int(0.4 * config['setup_params']['yInput'])],
                              padding="valid",
                              activation=tf.nn.relu,
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             kernel_initializer=initializer)
     bn_conv5 = tf.layers.batch_normalization(conv5, training=is_training)
-    pool5 = tf.layers.max_pooling2d(inputs=bn_conv5, pool_size=[1, bn_conv5.shape[2]],
+    pool5 = tf.layers.max_pooling2d(inputs=bn_conv5,
+                                    pool_size=[1, bn_conv5.shape[2]],
                                     strides=[1, bn_conv5.shape[2]])
     p5 = tf.squeeze(pool5, [2])
 
     # [TIMBRE] filter shape 6: 1x0.4f
-    conv6 = tf.layers.conv2d(inputs=input_layer, 
-                             filters=num_filt*4,
+    conv6 = tf.layers.conv2d(inputs=input_layer,
+                             filters=num_filt * 4,
                              kernel_size=[1, int(0.4 * config['setup_params']['yInput'])], padding="valid",
                              activation=tf.nn.relu,
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             kernel_initializer=initializer)
     bn_conv6 = tf.layers.batch_normalization(conv6, training=is_training)
-    pool6 = tf.layers.max_pooling2d(inputs=bn_conv6, pool_size=[1, bn_conv6.shape[2]],
+    pool6 = tf.layers.max_pooling2d(inputs=bn_conv6, 
+                                    pool_size=[1, bn_conv6.shape[2]],
                                     strides=[1, bn_conv6.shape[2]])
     p6 = tf.squeeze(pool6, [2])
 
@@ -187,7 +234,7 @@ def spec_frontend(x, is_training, config, num_filt):
                              kernel_size=165,
                              padding="same",
                              activation=tf.nn.relu,
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             kernel_initializer=initializer)
     bn_conv7 = tf.layers.batch_normalization(conv7, training=is_training)
 
     # [TEMPORAL-FEATURES] - average pooling + filter shape 8: 128x1
@@ -200,7 +247,7 @@ def spec_frontend(x, is_training, config, num_filt):
                              kernel_size=128,
                              padding="same",
                              activation=tf.nn.relu,
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             kernel_initializer=initializer)
     bn_conv8 = tf.layers.batch_normalization(conv8, training=is_training)
 
     # [TEMPORAL-FEATURES] - average pooling + filter shape 9: 64x1
@@ -213,7 +260,7 @@ def spec_frontend(x, is_training, config, num_filt):
                              kernel_size=64,
                              padding="same",
                              activation=tf.nn.relu,
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             kernel_initializer=initializer)
     bn_conv9 = tf.layers.batch_normalization(conv9, training=is_training)
 
     # [TEMPORAL-FEATURES] - average pooling + filter shape 10: 32x1
@@ -226,11 +273,12 @@ def spec_frontend(x, is_training, config, num_filt):
                               kernel_size=32,
                               padding="same",
                               activation=tf.nn.relu,
-                              kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                              kernel_initializer=initializer)
     bn_conv10 = tf.layers.batch_normalization(conv10, training=is_training)
 
     # concatenate all feature maps
-    pool = tf.concat([p1, p2, p3, p4, p5, p6, bn_conv7, bn_conv8, bn_conv9, bn_conv10], 2)
+    pool = tf.concat([p1, p2, p3, p4, p5, p6, bn_conv7, bn_conv8, bn_conv9,
+                      bn_conv10], 2)
     return tf.expand_dims(pool, 3)
 
 
