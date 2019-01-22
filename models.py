@@ -294,6 +294,7 @@ def backend(route_out, is_training, config, num_units):
         of the spectrogram config['setup_params']['yInput']
     - 'num_units': number of units/neurons of the output dense layer.
     '''
+    initializer = tf.contrib.layers.variance_scaling_initializer()
 
     # conv layer 1 - adapting dimensions
     conv1 = tf.layers.conv2d(inputs=route_out,
@@ -302,35 +303,40 @@ def backend(route_out, is_training, config, num_units):
                              padding="valid",
                              activation=tf.nn.relu,
                              name='1cnnOut',
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             kernel_initializer=initializer)
     bn_conv1 = tf.layers.batch_normalization(conv1, training=is_training)
     bn_conv1_t = tf.transpose(bn_conv1, [0, 1, 3, 2])
 
     # conv layer 2 - residual connection
-    bn_conv1_pad = tf.pad(bn_conv1_t, [[0, 0], [3, 3], [0, 0], [0, 0]], "CONSTANT")
+    bn_conv1_pad = tf.pad(bn_conv1_t,
+                          [[0, 0], [3, 3], [0, 0], [0, 0]],
+                          "CONSTANT")
     conv2 = tf.layers.conv2d(inputs=bn_conv1_pad,
                              filters=512,
                              kernel_size=[7, bn_conv1_pad.shape[2]],
                              padding="valid",
                              activation=tf.nn.relu,
                              name='2cnnOut',
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             kernel_initializer=initializer)
     conv2_t = tf.transpose(conv2, [0, 1, 3, 2])
     bn_conv2 = tf.layers.batch_normalization(conv2_t, training=is_training)
     res_conv2 = tf.add(bn_conv2, bn_conv1_t)
 
     # temporal pooling
-    pool1 = tf.layers.max_pooling2d(inputs=res_conv2, pool_size=[2, 1], strides=[2, 1], name='poolOut')
+    pool1 = tf.layers.max_pooling2d(inputs=res_conv2, pool_size=[2, 1],
+                                    strides=[2, 1], name='poolOut')
 
     # conv layer 3 - residual connection
-    bn_conv4_pad = tf.pad(pool1, [[0, 0], [3, 3], [0, 0], [0, 0]], "CONSTANT")
+    bn_conv4_pad = tf.pad(pool1,
+                          [[0, 0], [3, 3], [0, 0], [0, 0]],
+                          "CONSTANT")
     conv5 = tf.layers.conv2d(inputs=bn_conv4_pad,
                              filters=512,
                              kernel_size=[7, bn_conv4_pad.shape[2]],
                              padding="valid",
                              activation=tf.nn.relu,
                              name='3cnnOut',
-                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                             kernel_initializer=initializer)
     conv5_t = tf.transpose(conv5, [0, 1, 3, 2])
     bn_conv5 = tf.layers.batch_normalization(conv5_t, training=is_training)
     res_conv5 = tf.add(bn_conv5, pool1)
@@ -342,27 +348,33 @@ def backend(route_out, is_training, config, num_units):
     flat_pool2 = tf.contrib.layers.flatten(pool2)
 
     # output - 1 dense layer with droupout
-    flat_pool2_dropout = tf.layers.dropout(flat_pool2, rate=0.5, training=is_training)
+    flat_pool2_dropout = tf.layers.dropout(flat_pool2, rate=0.5,
+                                           training=is_training)
     dense = tf.layers.dense(inputs=flat_pool2_dropout,
                             units=num_units,
                             activation=tf.nn.relu,
-                            kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                            kernel_initializer=initializer)
     bn_dense = tf.layers.batch_normalization(dense, training=is_training)
     dense_dropout = tf.layers.dropout(bn_dense, rate=0.5, training=is_training)
     return tf.layers.dense(inputs=dense_dropout,
                            activation=tf.sigmoid,
                            units=config['numOutputNeurons'],
-                           kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+                           kernel_initializer=initializer)
 
 
 def build_model(x, is_training, config):
-    '''Function implementing an example of how to build a model with the functions above.
+    '''Function implementing an example of how to build a model with the
+        functions above.
 
     - 'x': placeholder whith the input.
-    - 'is_training': placeholder indicating weather it is training or test phase, for dropout or batch norm.
-    - 'config': dictionary with some configurable parameters like: number of output units - config['numOutputNeurons']
-                or number of frequency bins of the spectrogram config['setup_params']['yInput']
+    - 'is_training': placeholder indicating weather it is training or test
+        phase, for dropout or batch norm.
+    - 'config': dictionary with some configurable parameters like: number of
+        output units - config['numOutputNeurons'] or number of frequency bins
+        of the spectrogram config['setup_params']['yInput']
     '''
-    # The following line builds the model that achieved better results in our experiments.
-    # It is based on a spectrogram front-end (num_filters=16) with 500 output units in the dense layer.
-    return backend(spec_frontend(x, is_training, config, 16), is_training, config, 500)
+    # The following line builds the model that achieved better results in our
+    # experiments. It is based on a spectrogram front-end (num_filters=16)
+    # with 500 output units in the dense layer.
+    return backend(spec_frontend(x, is_training, config, 16), is_training,
+                   config, 500)
