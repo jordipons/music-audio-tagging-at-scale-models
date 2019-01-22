@@ -134,6 +134,7 @@ def spec_frontend(x, is_training, config, num_filt):
         for every filter shape.
     '''
     initializer = tf.contrib.layers.variance_scaling_initializer()
+    y_input = config['setup_params']['yInput']
     input_layer = tf.expand_dims(x, 3)
 
     # padding only time domain for an efficient 'same' implementation
@@ -146,10 +147,9 @@ def spec_frontend(x, is_training, config, num_filt):
                          "CONSTANT")
 
     # [TIMBRE] filter shape 1: 7x0.9f
-    kernel_size = [7, int(0.9 * config['setup_params']['yInput'])]
     conv1 = tf.layers.conv2d(inputs=input_pad_7,
                              filters=num_filt,
-                             kernel_size=kernel_size,
+                             kernel_size=[7, int(0.9 * y_input)],
                              padding="valid",
                              activation=tf.nn.relu,
                              kernel_initializer=initializer)
@@ -160,10 +160,9 @@ def spec_frontend(x, is_training, config, num_filt):
     p1 = tf.squeeze(pool1, [2])
 
     # [TIMBRE] filter shape 2: 3x0.9f
-    kernel_size = [3, int(0.9 * config['setup_params']['yInput'])]
     conv2 = tf.layers.conv2d(inputs=input_pad_3,
                              filters=num_filt*2,
-                             kernel_size=kernel_size,
+                             kernel_size=[3, int(0.9 * y_input)],
                              padding="valid",
                              activation=tf.nn.relu,
                              kernel_initializer=initializer)
@@ -176,7 +175,7 @@ def spec_frontend(x, is_training, config, num_filt):
     # [TIMBRE] filter shape 3: 1x0.9f
     conv3 = tf.layers.conv2d(inputs=input_layer,
                              filters=num_filt*4,
-                             kernel_size=[1, int(0.9 * config['setup_params']['yInput'])],
+                             kernel_size=[1, int(0.9 * y_input)],
                              padding="valid",
                              activation=tf.nn.relu,
                              kernel_initializer=initializer)
@@ -189,7 +188,7 @@ def spec_frontend(x, is_training, config, num_filt):
     # [TIMBRE] filter shape 3: 7x0.4f
     conv4 = tf.layers.conv2d(inputs=input_pad_7,
                              filters=num_filt,
-                             kernel_size=[7, int(0.4 * config['setup_params']['yInput'])],
+                             kernel_size=[7, int(0.4 * y_input)],
                              padding="valid",
                              activation=tf.nn.relu,
                              kernel_initializer=initializer)
@@ -202,7 +201,7 @@ def spec_frontend(x, is_training, config, num_filt):
     # [TIMBRE] filter shape 5: 3x0.4f
     conv5 = tf.layers.conv2d(inputs=input_pad_3,
                              filters=num_filt * 2,
-                             kernel_size=[3, int(0.4 * config['setup_params']['yInput'])],
+                             kernel_size=[3, int(0.4 * y_input)],
                              padding="valid",
                              activation=tf.nn.relu,
                              kernel_initializer=initializer)
@@ -215,19 +214,20 @@ def spec_frontend(x, is_training, config, num_filt):
     # [TIMBRE] filter shape 6: 1x0.4f
     conv6 = tf.layers.conv2d(inputs=input_layer,
                              filters=num_filt * 4,
-                             kernel_size=[1, int(0.4 * config['setup_params']['yInput'])], padding="valid",
+                             kernel_size=[1, int(0.4 * y_input)],
+                             padding="valid",
                              activation=tf.nn.relu,
                              kernel_initializer=initializer)
     bn_conv6 = tf.layers.batch_normalization(conv6, training=is_training)
-    pool6 = tf.layers.max_pooling2d(inputs=bn_conv6, 
+    pool6 = tf.layers.max_pooling2d(inputs=bn_conv6,
                                     pool_size=[1, bn_conv6.shape[2]],
                                     strides=[1, bn_conv6.shape[2]])
     p6 = tf.squeeze(pool6, [2])
 
     # [TEMPORAL-FEATURES] - average pooling + filter shape 7: 165x1
     pool7 = tf.layers.average_pooling2d(inputs=input_layer,
-                                        pool_size=[1, config['setup_params']['yInput']],
-                                        strides=[1, config['setup_params']['yInput']])
+                                        pool_size=[1, y_input],
+                                        strides=[1, y_input])
     pool7_rs = tf.squeeze(pool7, [3])
     conv7 = tf.layers.conv1d(inputs=pool7_rs,
                              filters=num_filt,
@@ -239,8 +239,8 @@ def spec_frontend(x, is_training, config, num_filt):
 
     # [TEMPORAL-FEATURES] - average pooling + filter shape 8: 128x1
     pool8 = tf.layers.average_pooling2d(inputs=input_layer,
-                                        pool_size=[1, config['setup_params']['yInput']],
-                                        strides=[1, config['setup_params']['yInput']])
+                                        pool_size=[1, y_input],
+                                        strides=[1, y_input])
     pool8_rs = tf.squeeze(pool8, [3])
     conv8 = tf.layers.conv1d(inputs=pool8_rs,
                              filters=num_filt*2,
@@ -252,8 +252,8 @@ def spec_frontend(x, is_training, config, num_filt):
 
     # [TEMPORAL-FEATURES] - average pooling + filter shape 9: 64x1
     pool9 = tf.layers.average_pooling2d(inputs=input_layer,
-                                        pool_size=[1, config['setup_params']['yInput']],
-                                        strides=[1, config['setup_params']['yInput']])
+                                        pool_size=[1, y_input],
+                                        strides=[1, y_input])
     pool9_rs = tf.squeeze(pool9, [3])
     conv9 = tf.layers.conv1d(inputs=pool9_rs,
                              filters=num_filt*4,
@@ -265,8 +265,8 @@ def spec_frontend(x, is_training, config, num_filt):
 
     # [TEMPORAL-FEATURES] - average pooling + filter shape 10: 32x1
     pool10 = tf.layers.average_pooling2d(inputs=input_layer,
-                                         pool_size=[1, config['setup_params']['yInput']],
-                                         strides=[1, config['setup_params']['yInput']])
+                                         pool_size=[1, y_input],
+                                         strides=[1, y_input])
     pool10_rs = tf.squeeze(pool10, [3])
     conv10 = tf.layers.conv1d(inputs=pool10_rs,
                               filters=num_filt*8,
@@ -285,10 +285,13 @@ def spec_frontend(x, is_training, config, num_filt):
 def backend(route_out, is_training, config, num_units):
     '''Function implementing the proposed back-end.
 
-    - 'route_out': is the output of the front-end, and therefore the input of this function.
-    - 'is_training': placeholder indicating weather it is training or test phase, for dropout or batch norm.
-    - 'config': dictionary with some configurable parameters like: number of output units - config['numOutputNeurons']
-                or number of frequency bins of the spectrogram config['setup_params']['yInput']
+    - 'route_out': is the output of the front-end, and therefore the input of
+        this function.
+    - 'is_training': placeholder indicating weather it is training or test
+        phase, for dropout or batch norm.
+    - 'config': dictionary with some configurable parameters like: number of
+        output units - config['numOutputNeurons'] or number of frequency bins
+        of the spectrogram config['setup_params']['yInput']
     - 'num_units': number of units/neurons of the output dense layer.
     '''
 
@@ -342,7 +345,7 @@ def backend(route_out, is_training, config, num_units):
     flat_pool2_dropout = tf.layers.dropout(flat_pool2, rate=0.5, training=is_training)
     dense = tf.layers.dense(inputs=flat_pool2_dropout,
                             units=num_units,
-                            activation=tf.nn.relu,                            
+                            activation=tf.nn.relu,
                             kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
     bn_dense = tf.layers.batch_normalization(dense, training=is_training)
     dense_dropout = tf.layers.dropout(bn_dense, rate=0.5, training=is_training)
