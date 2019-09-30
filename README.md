@@ -3,6 +3,8 @@ The lack of data tends to limit the outcomes of deep learning research - special
 
 Are you curious to see how our models work? We have a **demo**: http://www.jordipons.me/apps/music-audio-tagging-at-scale-demo/
 
+Are you searching for **pre-trained models**? We have recently released the musicnn library, with models trained with the MagnaTagATune and the Million Song Dataset: https://github.com/jordipons/musicnn 
+
 **Reference:** Pons, J., Nieto, O., Prockup, M., Schmidt, E., Ehmann, A., Serra, X., End-to-End Learning for Music Audio Tagging at Scale. Proc. of the 19th International Society for Music Information Retrieval Conference (ISMIR). Paris, France, 2018 ([PDF](https://ccrma.stanford.edu/~urinieto/MARL/publications/ISMIR2018-Pons.pdf)). 
 
 ## Models
